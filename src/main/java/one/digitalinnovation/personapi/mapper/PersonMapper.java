@@ -12,6 +12,7 @@ public interface PersonMapper {
     PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
 
     @Mapping(target = "birthDate", source = "birthDate", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "lastName", source = "lastName")
     Person toModel(PersonDTO personDTO);
     //toModel precisa obrigatoriamente ter esse nome para ser corretamente executado e converter um objeto DTO para objeto de banco de dados
 
