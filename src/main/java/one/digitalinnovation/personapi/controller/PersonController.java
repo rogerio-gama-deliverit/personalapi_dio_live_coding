@@ -1,5 +1,6 @@
 package one.digitalinnovation.personapi.controller;
 
+import lombok.AllArgsConstructor;
 import one.digitalinnovation.personapi.dto.request.PersonDTO;
 import one.digitalinnovation.personapi.dto.response.MessageResponseDTO;
 import one.digitalinnovation.personapi.exception.PersonNotFoundException;
@@ -13,14 +14,15 @@ import java.util.List;
 
 @RestController //indica que é um controlador acessado através de REST
 @RequestMapping("/api/v1/people")//endereço da request (URI que vai depois do localhost:8080), basicamente o nome
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PersonController {
 
     private PersonService personService;
 
-    @Autowired //indica ao spring para injetar uma implementação do tipo repository para dentro do método
-    public PersonController(PersonService personService) {
-        this.personService = personService;
-    }
+//    @Autowired //indica ao spring para injetar uma implementação do tipo repository para dentro do método
+//    public PersonController(PersonService personService) {
+//        this.personService = personService;
+//    } //com o @AllArgsConstructor usado não precisa do construtor normal pq lombok
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -36,6 +38,11 @@ public class PersonController {
     @GetMapping("/{id}")
     public PersonDTO findById(@PathVariable Long id) throws PersonNotFoundException {
         return personService.findById(id);
+    }
+
+    @PutMapping("/{id}")
+    public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody @Valid PersonDTO personDTO) throws PersonNotFoundException {
+        return personService.updateById(id, personDTO);
     }
 
     @DeleteMapping("/{id}")
