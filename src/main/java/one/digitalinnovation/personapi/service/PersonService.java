@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service //informa que a classe será responsável pelas regras de negócio
@@ -40,15 +39,24 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
 
-    public PersonDTO findById(Long id) throws PersonNotFoundException {
+    private Person verifyIfExists(Long id) throws PersonNotFoundException {
 //        Optional<Person> optionalPerson = personRepository.findById(id);
 //        if(optionalPerson.isEmpty()){
 //            throw new PersonNotFoundException(id);
 //        }
-//        return personMapper.toDTO(optionalPerson.get());
+//        return optionalPerson.get();
 
-        Person person = personRepository.findById(id)
+        return personRepository.findById(id)
                 .orElseThrow(() -> new PersonNotFoundException(id));
+    }
+
+    public PersonDTO findById(Long id) throws PersonNotFoundException {
+        Person person = verifyIfExists(id);
         return personMapper.toDTO(person);
+    }
+
+    public void deleteById(Long id) throws PersonNotFoundException {
+        verifyIfExists(id);
+        personRepository.deleteById(id);
     }
 }
